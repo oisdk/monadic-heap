@@ -78,16 +78,20 @@ instance (Group a, Ord a, Monad m) => Applicative (NodeT a m) where
     pure x = NodeT (pure (Node mempty x [] ))
     (<*>) = ap
 
-instance (Group a, Ord a, Monad m) => Monad (NodeT a m) where
+instance (Group a, Ord a, Monad m) =>
+         Monad (NodeT a m) where
     NodeT xs' >>= f = NodeT (xs' >>= goN mempty)
       where
-        goN i (Node k v [] ) = fmap ((i <> k) <>!) (runNodeT (f v))
-        goN i (Node k v (x : xs)) = liftA2 (\fv ys -> (ik <>! fv) <> ys) (runNodeT (f v)) (goF ik x xs)
-          where ik = i <> k
-
-        goF i x1 []  = goN i =<< runNodeT x1
-        goF i x1 [x2] = liftA2 (<>) (goN i =<< runNodeT x1) (goN i =<< runNodeT x2)
-        goF i x1 (x2 : x3 : xs) = liftA2 (<>) (liftA2 (<>) (goN i =<< runNodeT x1) (goN i =<< runNodeT x2)) (goF i x3 xs)
+        goN i (Node k v []) = fmap ((i <> k) <>!) (runNodeT (f v))
+        goN i (Node k v (x:xs)) =
+            liftA2 (\fv ys -> (ik <>! fv) <> ys) (runNodeT (f v)) (goF ik x xs)
+          where
+            ik = i <> k
+        goF i x1 [] = goN i =<< runNodeT x1
+        goF i x1 [x2] =
+            liftA2 (<>) (goN i =<< runNodeT x1) (goN i =<< runNodeT x2)
+        goF i x1 (x2:x3:xs) =
+            liftA2 (<>) (liftA2 (<>) (goN i =<< runNodeT x1) (goN i =<< runNodeT x2)) (goF i x3 xs)
 
 instance (Group a, Ord a, Applicative m) => Semigroup (HeapT a m b) where
     HeapT xs <> HeapT ys = HeapT (liftA2 (<>) xs ys)
@@ -115,11 +119,7 @@ instance (Group a, Ord a, MonadReader r m) =>
          MonadReader r (NodeT a m) where
     ask = lift ask
     local k (NodeT m) =
-        NodeT
-            (fmap
-                 (\(Node x xv xs) ->
-                       Node x xv (map (local k) xs))
-                 (local k m))
+        NodeT (fmap (\(Node x xv xs) -> Node x xv (map (local k) xs)) (local k m))
 
 (<&>) :: Functor f => f a -> (a -> b) -> f b
 (<&>) = flip fmap
