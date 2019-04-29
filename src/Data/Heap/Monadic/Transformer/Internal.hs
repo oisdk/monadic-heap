@@ -167,3 +167,6 @@ popMin (HeapT xs) = xs <&> \case
     Empty -> Nothing
     Tree (Node x y ys) -> Just ((x,y) , HeapT ((x <>*) <$> runHeapT (mergeQs ys)))
 {-# INLINE popMin #-}
+
+lower :: (Monad m, Alternative m, Ord a, Group a) => HeapT a m b -> m b
+lower xs = popMin xs >>= maybe empty (\((_,y),ys) -> pure y <|> lower ys)
