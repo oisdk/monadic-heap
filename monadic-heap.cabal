@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 801289346600eac9d1b71ae84a9126850ed0fd5cd7df464774edbd07b385f9f4
+-- hash: ed8cef78a0789c8dd36a90b8d9bd48964bf71ab2d6c98807ac9e7046e939e6d9
 
 name:           monadic-heap
 version:        0.1.0.0
@@ -24,13 +24,17 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Data.Group
+      Data.Heap.Monadic.Internal
+      Data.Heap.Monadic.Transformer.Internal
   other-modules:
       Paths_monadic_heap
   hs-source-dirs:
       src
   build-depends:
       base >=4.12 && <5
+    , mtl >=2.0.0
+    , transformers >=0.3.0
   default-language: Haskell2010
 
 test-suite monadic-heap-test
@@ -44,4 +48,6 @@ test-suite monadic-heap-test
   build-depends:
       base >=4.12 && <5
     , monadic-heap
+    , mtl >=2.0.0
+    , transformers >=0.3.0
   default-language: Haskell2010

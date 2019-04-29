@@ -10,6 +10,8 @@ description:         Please see the README on GitHub at <https://github.com/oisd
 
 dependencies:
 - base >= 4.12 && < 5
+- transformers >= 0.3.0
+- mtl >= 2.0.0
 
 library:
   source-dirs: src

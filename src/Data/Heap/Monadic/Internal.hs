@@ -107,6 +107,9 @@ prios :: (Ord a, Group a) => Heap a b -> [(a,b)]
 prios = unfoldr popMin
 {-# INLINE prios #-}
 
+fromList :: (Ord a, Group a) => [(a,b)] -> Heap a b
+fromList = foldMap (uncurry prio)
+
 foldrComm :: (a -> b -> b) -> b -> Heap k a -> b
 foldrComm f = flip go
   where
@@ -137,3 +140,12 @@ instance (Ord a, Group a) => Foldable (Heap a) where
     null Empty = True
     null _ = False
     elem x = foldrComm (\y b -> x == y || b) False
+
+instance (Ord a, Group a, Eq b) => Eq (Heap a b) where
+    xs == ys = prios xs == prios ys
+
+instance (Ord a, Group a, Ord b) => Ord (Heap a b) where
+    compare xs ys = compare (prios xs) (prios ys)
+
+instance (Ord a, Group a, Show a, Show b) => Show (Heap a b) where
+    showsPrec n xs s = "fromList " ++ showsPrec n (prios xs) s
