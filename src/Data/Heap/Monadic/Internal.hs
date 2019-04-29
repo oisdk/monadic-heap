@@ -149,3 +149,6 @@ instance (Ord a, Group a, Ord b) => Ord (Heap a b) where
 
 instance (Ord a, Group a, Show a, Show b) => Show (Heap a b) where
     showsPrec n xs s = "fromList " ++ showsPrec n (prios xs) s
+
+instance (Ord a, Group a) => Traversable (Heap a) where
+    traverse f = fmap fromList . (traverse.traverse) f . prios
