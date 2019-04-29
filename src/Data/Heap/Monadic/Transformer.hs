@@ -3,6 +3,7 @@ module Data.Heap.Monadic.Transformer
   ,prio
   ,popMin
   ,Group(..)
+  ,lower
   )
   where
 
