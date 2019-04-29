@@ -4,6 +4,8 @@
 {-# LANGUAGE UndecidableInstances  #-}
 {-# LANGUAGE LambdaCase            #-}
 
+{-# OPTIONS_HADDOCK not-home #-}
+
 module Data.Heap.Monadic.Transformer.Internal where
 
 import           Control.Applicative

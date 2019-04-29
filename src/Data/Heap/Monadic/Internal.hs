@@ -1,6 +1,14 @@
 {-# LANGUAGE DeriveFunctor #-}
 {-# LANGUAGE BangPatterns  #-}
 
+{-# OPTIONS_HADDOCK not-home #-}
+------------------------------------------------------------------------
+-- |
+-- Module      : Data.Heap.Monadic.Internal
+-- Copyright   : Donnacha Oisín Kidney 2019
+-- License     : Apache 2.0
+-- Portability : GHC
+
 module Data.Heap.Monadic.Internal where
 
 import Data.Group
@@ -8,6 +16,7 @@ import Control.Applicative
 import Control.Monad
 import Data.List (unfoldr)
 
+-- | A pairing heap with priorities in a.
 data Heap a b
     = Empty
     | Tree {-# UNPACK #-} !(Node a b)
@@ -86,6 +95,9 @@ instance (Group a, Ord a) => Alternative (Heap a) where
 
 instance (Group a, Ord a) => MonadPlus (Heap a)
 
+-- |
+-- 'prio' @x@ @y@ constructs a singleton heap with a value @y@ and a
+-- priority @x@.
 prio :: a -> b -> Heap a b
 prio x y = Tree (Node x y Nil)
 {-# INLINE prio #-}
@@ -98,15 +110,18 @@ mergeQs (x :- xs) = Tree (go x xs)
     go t1 (t2 :- Nil) = t1 <> t2
     go t1 (t2 :- t3 :- ts) = (t1 <> t2) <> go t3 ts
 
+-- | Get the item with the lowest key.
 popMin :: (Ord a, Group a) => Heap a b -> Maybe ((a,b), Heap a b)
 popMin Empty = Nothing
 popMin (Tree (Node x y xs)) = Just ((x,y), x <>* mergeQs xs)
 {-# INLINE popMin #-}
 
+-- | Get all items, in ascending order of keys.
 prios :: (Ord a, Group a) => Heap a b -> [(a,b)]
 prios = unfoldr popMin
 {-# INLINE prios #-}
 
+-- | Construct a heap from a list of keys with priorities.
 fromList :: (Ord a, Group a) => [(a,b)] -> Heap a b
 fromList = foldMap (uncurry prio)
 
