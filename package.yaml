@@ -1,0 +1,26 @@
+name:                monadic-heap
+version:             0.1.0.0
+github:              "oisdk/monadic-heap"
+license:             Apache-2.0
+author:              "Donnacha Oisín Kidney"
+maintainer:          "mail@doisinkidney.com"
+copyright:           "2019 Donnacha Oisín Kidney"
+
+description:         Please see the README on GitHub at <https://github.com/oisdk/monadic-heap#readme>
+
+dependencies:
+- base >= 4.12 && < 5
+
+library:
+  source-dirs: src
+
+tests:
+  monadic-heap-test:
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - monadic-heap
