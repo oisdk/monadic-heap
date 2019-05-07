@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 138a89794d0f69777e13b6c989dc91349b6e3795e889d4d5f813d03dd65fb6fa
+-- hash: 2b51a3c8e8e82a7a409c9bca12583d26df475dc03d36c2365445a50f844dff9f
 
 name:           monadic-heap
 version:        0.1.0.0
@@ -24,6 +24,7 @@ source-repository head
 
 library
   exposed-modules:
+      Control.Monad.Star
       Data.Group
       Data.Heap.Monadic
       Data.Heap.Monadic.Internal

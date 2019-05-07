@@ -84,7 +84,7 @@ instance (Group a, Ord a) => Monad (Heap a) where
     Empty    >>= _ = Empty
     Tree xs' >>= f = goN xs'
       where
-        goN (Node w x xs) = w <>* mergeHs1 goN (f x) xs
+        goN (Node w x xs) = w <>* (mergeHs goN xs <> f x)
 
 instance (Group a, Ord a) => Alternative (Heap a) where
     empty = mempty
@@ -275,4 +275,4 @@ instance (Group a, Ord a)
       where
         go Empty = Nil
         go (Tree (Node k x xs)) =
-          Node k x (go (f x <> mergeNs id xs)) :- Nil
+          Node k x (go (mergeNs id xs <> f x)) :- Nil
