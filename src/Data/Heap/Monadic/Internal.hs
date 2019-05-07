@@ -15,6 +15,7 @@ module Data.Heap.Monadic.Internal where
 
 import           Control.Applicative
 import           Control.Monad
+import           Control.Monad.Star
 import           Control.Monad.Writer
 import           Data.Function
 import           Data.Group
@@ -267,3 +268,11 @@ instance (Ord a, Group a) =>
     listen (Tree xs) = Tree (listen xs)
     pass Empty     = Empty
     pass (Tree xs) = Tree (pass xs)
+
+instance (Group a, Ord a)
+      => MonadStar (Heap a) where
+    star f x' = Tree (Node mempty x' (go (f x')))
+      where
+        go Empty = Nil
+        go (Tree (Node k x xs)) =
+          Node k x (go (f x <> mergeNs id xs)) :- Nil
