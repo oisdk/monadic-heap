@@ -17,6 +17,8 @@ module Data.Heap.Monadic
   ,popMin
   ,prios
   ,fromList
+  ,fromListWith
+  ,ordPrios
   )
   where
 
